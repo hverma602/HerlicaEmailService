@@ -1,5 +1,7 @@
 import { createServer } from "node:http";
 import { sendMail, verifySmtpConnection } from "./mailer.js";
+const cors = require("cors");
+app.use(cors());
 
 function sendJson(response, statusCode, data) {
   response.writeHead(statusCode, { "Content-Type": "application/json" });
@@ -32,7 +34,6 @@ const server = createServer(async (request, response) => {
 
     if (request.method === "POST" && request.url === "/send") {
       const body = await readJson(request);
-      console.log("Received email send request:", body);
       const info = await sendMail(body);
       sendJson(response, 202, { ok: true, messageId: info.messageId });
       return;
