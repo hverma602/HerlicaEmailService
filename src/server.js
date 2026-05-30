@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { sendMail, verifySmtpConnection } from "./mailer.js";
-const cors = require("cors");
+import cors from "cors";
 app.use(cors());
 
 function sendJson(response, statusCode, data) {
