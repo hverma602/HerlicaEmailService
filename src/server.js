@@ -1,13 +1,12 @@
 import { createServer } from "node:http";
 import { sendMail, verifySmtpConnection } from "./mailer.js";
 
-const port = Number.parseInt(process.env.PORT || "3000", 10);
-const host = process.env.HOST || "127.0.0.1";
-
 function sendJson(response, statusCode, data) {
   response.writeHead(statusCode, { "Content-Type": "application/json" });
   response.end(JSON.stringify(data));
 }
+
+const PORT = process.env.PORT || 3000;
 
 async function readJson(request) {
   const chunks = [];
@@ -46,6 +45,6 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(port, host, () => {
-  console.log(`SMTP app listening on http://${host}:${port}`);
+server.listen(PORT, () => {
+  console.log(`SMTP app listening on ${PORT}`);
 });
