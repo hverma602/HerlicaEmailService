@@ -1,7 +1,5 @@
 import { createServer } from "node:http";
 import { sendMail, verifySmtpConnection } from "./mailer.js";
-import cors from "cors";
-app.use(cors());
 
 function sendJson(response, statusCode, data) {
   response.writeHead(statusCode, { "Content-Type": "application/json" });
@@ -25,6 +23,10 @@ async function readJson(request) {
 }
 
 const server = createServer(async (request, response) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
   try {
     if (request.method === "GET" && request.url === "/health") {
       await verifySmtpConnection();
