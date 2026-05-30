@@ -19,6 +19,8 @@ const transporter = nodemailer.createTransport({
     user: userEmail,
     pass: process.env.APP_PASSWORD,
   },
+  logger: true,
+  debug: true,
 });
 
 const genrateTemplate = (name, email, companyName, phoneNumber, message) => {
