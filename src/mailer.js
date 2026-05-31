@@ -6,8 +6,8 @@ const userEmail = process.env.GMAIL_USER || "herilicacreation26@gmail.com";
 const mailFromName = "Herilica Creation";
 const mailFrom = { name: mailFromName, address: userEmail };
 
-if (!process.env.APP_PASSWORD) {
-  throw new Error("Missing APP_PASSWORD in environment.");
+if (!process.env.RESEND_API_KEY) {
+  throw new Error("Missing RESEND_API_KEY in environment.");
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY);
