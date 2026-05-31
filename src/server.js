@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { sendMail } from "./mailer.js";
+import { sendMail, sendUserMail } from "./mailer.js";
 
 function sendJson(response, statusCode, data) {
   response.writeHead(statusCode, { "Content-Type": "application/json" });
@@ -37,8 +37,10 @@ const server = createServer(async (request, response) => {
     if (request.method === "POST" && request.url === "/send") {
       const body = await readJson(request);
       const info = await sendMail(body);
-      console.log("Email sent:", info);
-      sendJson(response, 202, { ok: true, messageId: info.messageId });
+      await sendUserMail(body);
+      console.log("Email sent successfully:", info);
+
+      sendJson(response, 202, { ok: true, messageId: info.data.id });
       return;
     }
 

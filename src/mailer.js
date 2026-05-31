@@ -12,6 +12,45 @@ if (!process.env.RESEND_API_KEY) {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const userResponse = () => {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquiry Received</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6; margin: 0; padding: 20px;">
+
+    <div style="max-width: 600px; margin: 0 auto; border: 1px solid #ddd; padding: 30px; border-radius: 8px;">
+        
+        <h2 style="color: #2c3e50;">Thank You for Your Enquiry</h2>
+
+        <p>Dear Customer,</p>
+
+        <p>
+            We have successfully received your enquiry. Thank you for reaching out to us.
+        </p>
+
+        <p>
+            Our team is reviewing your request and will get back to you as soon as possible.
+        </p>
+
+        <p>
+            If your matter is urgent, please feel free to contact us directly.
+        </p>
+
+        <p>
+            Best regards,<br>
+            <strong>Herilica Creation</strong>
+        </p>
+
+    </div>
+
+</body>
+</html>`;
+};
+
 const genrateTemplate = (name, email, companyName, phoneNumber, message) => {
   return `<!DOCTYPE html>
 
@@ -107,9 +146,7 @@ const genrateTemplate = (name, email, companyName, phoneNumber, message) => {
 
 export async function sendMail({
   to,
-  subject,
   name,
-  email,
   companyName,
   phoneNumber,
   message,
@@ -118,15 +155,24 @@ export async function sendMail({
     throw new Error("The 'to' field is required.");
   }
 
-  if (!subject) {
-    throw new Error("The 'subject' field is required.");
-  }
-
   return resend.emails.send({
     from: "noreply@herilicacreation.com",
     cc: userEmail,
     to,
-    subject,
+    subject: `New Enquiry from ${name} (${companyName})`,
     html: genrateTemplate(name, to, companyName, phoneNumber, message),
+  });
+}
+
+export async function sendUserMail({ to }) {
+  if (!to) {
+    throw new Error("The 'to' field is required.");
+  }
+
+  return resend.emails.send({
+    from: "noreply@herilicacreation.com",
+    to,
+    subject: "Thank You for Your Enquiry",
+    html: userResponse(),
   });
 }
