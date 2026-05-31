@@ -144,7 +144,13 @@ const genrateTemplate = (name, email, companyName, phoneNumber, message) => {
 `;
 };
 
-export async function sendMail({ name, companyName, phoneNumber, message }) {
+export async function sendMail({
+  to,
+  name,
+  companyName,
+  phoneNumber,
+  message,
+}) {
   return resend.emails.send({
     from: "noreply@herilicacreation.com",
     to: userEmail,
