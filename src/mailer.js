@@ -144,21 +144,10 @@ const genrateTemplate = (name, email, companyName, phoneNumber, message) => {
 `;
 };
 
-export async function sendMail({
-  to,
-  name,
-  companyName,
-  phoneNumber,
-  message,
-}) {
-  if (!to) {
-    throw new Error("The 'to' field is required.");
-  }
-
+export async function sendMail({ name, companyName, phoneNumber, message }) {
   return resend.emails.send({
     from: "noreply@herilicacreation.com",
-    cc: userEmail,
-    to,
+    to: userEmail,
     subject: `New Enquiry from ${name} (${companyName})`,
     html: genrateTemplate(name, to, companyName, phoneNumber, message),
   });
