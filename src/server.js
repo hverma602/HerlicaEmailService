@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { sendMail, verifySmtpConnection } from "./mailer.js";
+import { sendMail } from "./mailer.js";
 
 function sendJson(response, statusCode, data) {
   response.writeHead(statusCode, { "Content-Type": "application/json" });
@@ -34,15 +34,10 @@ const server = createServer(async (request, response) => {
   }
 
   try {
-    if (request.method === "GET" && request.url === "/health") {
-      await verifySmtpConnection();
-      sendJson(response, 200, { ok: true, smtp: "connected" });
-      return;
-    }
-
     if (request.method === "POST" && request.url === "/send") {
       const body = await readJson(request);
       const info = await sendMail(body);
+      console.log("Email sent:", info);
       sendJson(response, 202, { ok: true, messageId: info.messageId });
       return;
     }

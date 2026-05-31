@@ -1,5 +1,5 @@
 import "dotenv/config";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 const userEmail = process.env.GMAIL_USER || "herilicacreation26@gmail.com";
 
@@ -10,18 +10,7 @@ if (!process.env.APP_PASSWORD) {
   throw new Error("Missing APP_PASSWORD in environment.");
 }
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  family: 4,
-  auth: {
-    user: userEmail,
-    pass: process.env.APP_PASSWORD,
-  },
-  logger: true,
-  debug: true,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const genrateTemplate = (name, email, companyName, phoneNumber, message) => {
   return `<!DOCTYPE html>
@@ -133,15 +122,11 @@ export async function sendMail({
     throw new Error("The 'subject' field is required.");
   }
 
-  return transporter.sendMail({
-    from: mailFrom,
-    cc: mailFrom,
+  return resend.emails.send({
+    from: "noreply@herilicacreation.com",
+    cc: userEmail,
     to,
     subject,
     html: genrateTemplate(name, to, companyName, phoneNumber, message),
   });
-}
-
-export async function verifySmtpConnection() {
-  return transporter.verify();
 }
